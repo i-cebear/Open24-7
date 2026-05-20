@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPEN 24/7 — Always Together</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lavender-50: #f5f3ff;
+    --lavender-100: #ede9fe;
+    --lavender-200: #ddd6fe;
+    --lavender-300: #c4b5fd;
+    --lavender-400: #a78bfa;
+    --lavender-500: #8b5cf6;
+    --lavender-600: #7c3aed;
+    --lavender-soft: #e8e4f8;
+    --lilac: #d4c8f5;
+    --blush: #f5e6f0;
+    --cream: #fdf9f0;
+    --text-dark: #2d2438;
+    --text-mid: #5c4f7a;
+    --text-light: #8b7faa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ---- CURSOR ---- */
+  body { cursor: default; }
+
+  /* ---- FLOATING PETALS ---- */
+  .petals-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    width: 8px; height: 12px;
+    border-radius: 50% 50% 50% 0;
+    opacity: 0.18;
+    animation: floatDown linear infinite;
+  }
+  @keyframes floatDown {
+    0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.18; }
+    90%  { opacity: 0.18; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ---- BLUR ORBS ---- */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, #ede9fe 0%, #f5e6f0 40%, var(--cream) 100%);
+    overflow: hidden;
+  }
+
+  .hero-orb-1 {
+    width: 520px; height: 520px;
+    background: #c4b5fd;
+    top: -160px; left: -140px;
+    opacity: 0.38;
+    filter: blur(100px);
+  }
+  .hero-orb-2 {
+    width: 440px; height: 440px;
+    background: #f9a8d4;
+    top: -80px; right: -100px;
+    opacity: 0.32;
+    filter: blur(110px);
+  }
+  .hero-orb-3 {
+    width: 380px; height: 380px;
+    background: #a78bfa;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.22;
+    filter: blur(90px);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(196,181,253,0.55);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+    position: relative; z-index: 2;
+  }
+
+  .hero-badge span { color: var(--lavender-500); font-size: 16px; }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(64px, 14vw, 130px);
+    font-weight: 600;
+    line-height: 0.9;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.8s 0.1s ease both;
+    position: relative; z-index: 2;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--lavender-500);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(18px, 4vw, 28px);
+    color: var(--text-mid);
+    margin-top: 20px;
+    animation: fadeUp 0.8s 0.2s ease both;
+    position: relative; z-index: 2;
+  }
+
+  .hero-names {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 36px;
+    animation: fadeUp 0.8s 0.3s ease both;
+    position: relative; z-index: 2;
+  }
+
+  .hero-name-tag {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(196,181,253,0.5);
+    border-radius: 100px;
+    padding: 8px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-mid);
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative; z-index: 2;
+  }
+
+  .hero-name-tag:hover {
+    background: var(--lavender-100);
+    border-color: var(--lavender-400);
+    color: var(--lavender-600);
+    transform: translateY(-3px);
+  }
+
+  .hero-scroll {
+    margin-top: 60px;
+    animation: fadeUp 0.8s 0.5s ease both, bounce 2s 1s ease infinite;
+    color: var(--text-light);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--lavender-300), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(6px); }
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    background: rgba(253, 249, 240, 0.75);
+    border-bottom: 1px solid rgba(196,181,253,0.3);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--text-dark);
+  }
+
+  .nav-logo span { color: var(--lavender-500); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-mid);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--lavender-600); }
+
+  /* ---- SECTION SHARED ---- */
+  .section { position: relative; z-index: 1; padding: 100px 24px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lavender-400);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 58px);
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--lavender-500);
+  }
+
+  .section-desc {
+    font-size: 16px;
+    color: var(--text-light);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* ---- MEMORIES SECTION ---- */
+  .memories-section {
+    background: var(--lavender-50);
+    overflow: hidden;
+  }
+  .mem-orb-1 {
+    width: 600px; height: 600px;
+    background: #ddd6fe;
+    top: -200px; right: -200px;
+    opacity: 0.45;
+    filter: blur(120px);
+  }
+  .mem-orb-2 {
+    width: 400px; height: 400px;
+    background: #f5e6f0;
+    bottom: -100px; left: -100px;
+    opacity: 0.5;
+    filter: blur(100px);
+  }
+
+  .memories-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .memories-header .section-desc { margin: 0 auto; }
+
+  .memories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .memory-card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid rgba(221,214,254,0.7);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+
+  .memory-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.18);
+  }
+
+  .memory-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    background: var(--lavender-100);
+  }
+
+  .memory-img-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--lavender-100) 0%, var(--blush) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .memory-dual-photos {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 4/3;
+    gap: 3px;
+  }
+
+  .memory-img-placeholder.half {
+    flex: 1;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+
+  .memory-img-placeholder .emoji {
+    font-size: 48px;
+  }
+
+  .memory-img-placeholder .ph-label {
+    font-size: 12px;
+    color: var(--text-light);
+    letter-spacing: 0.06em;
+  }
+
+  .memory-body {
+    padding: 22px 24px 24px;
+  }
+
+  .memory-date {
+    font-size: 11px;
+    color: var(--lavender-400);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .memory-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .memory-desc {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  .memory-tag {
+    display: inline-block;
+    margin-top: 14px;
+    background: var(--lavender-50);
+    border: 1px solid var(--lavender-200);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+
+  /* ---- PHOTO UPLOAD AREA ---- */
+  .photo-note {
+    text-align: center;
+    margin-top: 40px;
+    padding: 24px;
+    border: 1.5px dashed rgba(196,181,253,0.6);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .photo-note p {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  .photo-note strong { color: var(--text-mid); }
+
+  /* ---- ABOUT US SECTION ---- */
+  .about-section {
+    background: white;
+    overflow: hidden;
+  }
+  .about-orb-1 {
+    width: 500px; height: 500px;
+    background: #ede9fe;
+    top: 100px; right: -180px;
+    opacity: 0.5;
+    filter: blur(110px);
+  }
+  .about-orb-2 {
+    width: 450px; height: 450px;
+    background: #fce7f3;
+    bottom: 200px; left: -150px;
+    opacity: 0.4;
+    filter: blur(100px);
+  }
+
+  .about-header { margin-bottom: 60px; }
+
+  .group-photo-frame {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 80px;
+    display: block;
+  }
+
+  .group-photo-inner {
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, var(--lavender-100), var(--blush));
+    border: 2px solid rgba(196,181,253,0.5);
+    box-shadow: 0 8px 40px rgba(167,139,250,0.18), inset 0 0 0 1px rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    backdrop-filter: blur(4px);
+  }
+
+  .group-photo-inner .placeholder-icon { font-size: 56px; }
+  .group-photo-inner .placeholder-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    color: var(--text-mid);
+  }
+  .group-photo-inner .placeholder-sub {
+    font-size: 12px;
+    color: var(--text-light);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .group-photo-inner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .group-photo-caption {
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    color: var(--text-mid);
+    margin-top: 16px;
+  }
+
+  /* ---- PERSON CARDS ---- */
+  .person-block {
+    margin-bottom: 80px;
+    scroll-margin-top: 80px;
+  }
+
+  .person-block:last-child { margin-bottom: 0; }
+
+  .person-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .person-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .av-a { background: var(--lavender-100); color: var(--lavender-600); }
+  .av-r { background: #fce7f3; color: #9d174d; }
+  .av-v { background: #ecfdf5; color: #065f46; }
+  .av-vk { background: #fff7ed; color: #9a3412; }
+
+  .person-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+
+  .person-role {
+    font-size: 13px;
+    color: var(--lavender-400);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .tributes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .tribute-card {
+    background: rgba(245,243,255,0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(221,214,254,0.6);
+    border-radius: 18px;
+    padding: 22px 20px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .tribute-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(139,92,246,0.1);
+  }
+
+  .tribute-card::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 60px;
+    color: var(--lavender-200);
+    line-height: 0.8;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .tribute-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+
+  .tribute-author {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--lavender-100);
+    font-size: 12px;
+    color: var(--text-light);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tribute-author::before {
+    content: '— ';
+    color: var(--lavender-400);
+  }
+
+  /* ---- PERSON PHOTO ---- */
+  .person-photo-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .person-photo-frame {
+    flex-shrink: 0;
+    width: 200px;
+  }
+
+  .person-photo-inner {
+    width: 200px;
+    height: 240px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(145deg, var(--lavender-100), var(--blush));
+    border: 1.5px solid rgba(196,181,253,0.5);
+    box-shadow: 0 8px 32px rgba(139,92,246,0.13), inset 0 1px 0 rgba(255,255,255,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .person-photo-inner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+  }
+
+  .person-photo-inner .ph-emoji { font-size: 40px; }
+  .person-photo-inner .ph-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 15px;
+    color: var(--text-mid);
+    text-align: center;
+    padding: 0 12px;
+  }
+  .person-photo-inner .ph-hint {
+    font-size: 10px;
+    color: var(--text-light);
+    letter-spacing: 0.06em;
+    text-align: center;
+    padding: 0 10px;
+  }
+
+  .person-photo-caption {
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 10px;
+  }
+
+  .person-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  /* Colour tints per person */
+  .photo-tint-a { background: linear-gradient(145deg, #ede9fe, #e8d5f5); }
+  .photo-tint-r { background: linear-gradient(145deg, #fce7f3, #ffe4ee); }
+  .photo-tint-v { background: linear-gradient(145deg, #ecfdf5, #d1fae5); }
+  .photo-tint-vk { background: linear-gradient(145deg, #fff7ed, #fde8cf); }
+
+  @media (max-width: 640px) {
+    .person-photo-wrap {
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+    .person-photo-frame { width: 160px; }
+    .person-photo-inner { width: 160px; height: 190px; }
+    .person-info { align-items: center; text-align: center; }
+    .person-role { text-align: center; }
+  }
+
+  /* ---- DIVIDER ---- */
+  .ornament-divider {
+    text-align: center;
+    margin: 0;
+    padding: 40px 0;
+    color: var(--lavender-300);
+    font-size: 20px;
+    letter-spacing: 16px;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    position: relative;
+    z-index: 1;
+    background: var(--text-dark);
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+
+  .footer-logo span { color: var(--lavender-400); }
+
+  .footer-tagline {
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    color: var(--lavender-300);
+    margin-top: 8px;
+  }
+
+  .footer-names {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #7c6f9a;
+    letter-spacing: 0.1em;
+  }
+
+  .footer-heart {
+    margin-top: 32px;
+    font-size: 20px;
+  }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ---- HAMBURGER ---- */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 200;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-mid);
+    border-radius: 2px;
+    transition: transform 0.35s ease, opacity 0.25s ease, width 0.3s ease;
+    transform-origin: center;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile drawer */
+  .mobile-drawer {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0; right: 0;
+    background: rgba(237, 233, 254, 0.25);
+    backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
+    border-bottom: 1px solid rgba(196,181,253,0.35);
+    box-shadow: 0 16px 48px rgba(139,92,246,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+    z-index: 99;
+    padding: 0 24px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+  }
+
+  .mobile-drawer.open {
+    max-height: 420px;
+    padding: 8px 20px 20px;
+  }
+
+  .mobile-drawer a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 12px;
+    margin: 3px 0;
+    border-bottom: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-dark);
+    text-decoration: none;
+    background: transparent;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+
+  .mobile-drawer a:last-child { border-bottom: none; }
+
+  .mobile-drawer a:hover, .mobile-drawer a:active {
+    background: rgba(196,181,253,0.22);
+    color: var(--lavender-600);
+    transform: translateX(4px);
+  }
+
+  .mobile-drawer .drawer-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--lavender-300);
+    flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(167,139,250,0.5);
+  }
+
+  .mobile-drawer .drawer-section-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lavender-400);
+    padding: 10px 12px 4px;
+    display: block;
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .mobile-drawer { display: block; }
+    .person-header { flex-direction: column; align-items: flex-start; }
+    .tributes-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating petals background -->
+<div class="petals-bg" id="petals"></div>
+
+<!-- Sticky Nav -->
+<nav>
+  <div class="nav-logo">OPEN <span>24/7</span></div>
+  <ul class="nav-links">
+    <li><a href="#memories">Memories</a></li>
+    <li><a href="#about">About Us</a></li>
+    <li><a href="#abhimanyu">Abhimanyu</a></li>
+    <li><a href="#ridhi">Ridhi</a></li>
+    <li><a href="#versha">Versha</a></li>
+    <li><a href="#vikram">Vikram</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <span class="drawer-section-label">✦ navigate</span>
+  <a href="#memories" class="drawer-link"><span class="drawer-dot" style="background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,0.7)"></span> Memories</a>
+  <a href="#about" class="drawer-link"><span class="drawer-dot" style="background:#ddd6fe;box-shadow:0 0 7px rgba(221,214,254,0.7)"></span> About Us</a>
+  <span class="drawer-section-label">✦ the four of us</span>
+  <a href="#abhimanyu" class="drawer-link"><span class="drawer-dot" style="background:#a78bfa;box-shadow:0 0 7px rgba(167,139,250,0.7)"></span> Abhimanyu</a>
+  <a href="#ridhi" class="drawer-link"><span class="drawer-dot" style="background:#f9a8d4;box-shadow:0 0 7px rgba(249,168,212,0.7)"></span> Ridhi</a>
+  <a href="#versha" class="drawer-link"><span class="drawer-dot" style="background:#6ee7b7;box-shadow:0 0 7px rgba(110,231,183,0.7)"></span> Versha</a>
+  <a href="#vikram" class="drawer-link"><span class="drawer-dot" style="background:#fdba74;box-shadow:0 0 7px rgba(253,186,116,0.7)"></span> Vikram</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="orb hero-orb-1"></div>
+  <div class="orb hero-orb-2"></div>
+  <div class="orb hero-orb-3"></div>
+  <div class="hero-badge"><span>✦</span> est. always &amp; forever <span>✦</span></div>
+  <h1 class="hero-title">OPEN<br><em>24/7</em></h1>
+  <p class="hero-subtitle">because real ones never close 🤍</p>
+  <div class="hero-names">
+    <span class="hero-name-tag">Abhimanyu</span>
+    <span class="hero-name-tag">Ridhi</span>
+    <span class="hero-name-tag">Versha</span>
+    <span class="hero-name-tag">Vikram</span>
+  </div>
+  <div class="hero-scroll">scroll down</div>
+</section>
+
+<!-- Memories Section -->
+<section class="section memories-section" id="memories">
+  <div class="orb mem-orb-1"></div>
+  <div class="orb mem-orb-2"></div>
+  <div class="section-inner">
+    <div class="memories-header reveal">
+      <div class="section-label">✦ our story</div>
+      <h2 class="section-title">The <em>memories</em><br>we made</h2>
+      <p class="section-desc">Every laugh, every late night, every random plan that somehow worked out — all of it lives here.</p>
+    </div>
+
+    <div class="memories-grid">
+
+      <div class="memory-card reveal reveal-delay-1">
+        <div class="memory-dual-photos">
+          <div class="memory-img-placeholder half">
+            <div class="emoji">🎓</div>
+            <div class="ph-label">photo 1</div>
+          </div>
+          <div class="memory-img-placeholder half">
+            <div class="emoji">🎓</div>
+            <div class="ph-label">photo 2</div>
+          </div>
+        </div>
+        <div class="memory-body">
+          <div class="memory-date">Memory 01</div>
+          <div class="memory-title">Teachers Day</div>
+          <div class="memory-desc">The day that started it all — dressed up, laughing too loud, making memories with the teachers who actually made a difference. Some stories only happen once.</div>
+          <span class="memory-tag">🎓 Teachers Day</span>
+        </div>
+      </div>
+
+      <div class="memory-card reveal reveal-delay-2">
+        <div class="memory-dual-photos">
+          <div class="memory-img-placeholder half">
+            <div class="emoji">🌙</div>
+            <div class="ph-label">photo 1</div>
+          </div>
+          <div class="memory-img-placeholder half">
+            <div class="emoji">🌙</div>
+            <div class="ph-label">photo 2</div>
+          </div>
+        </div>
+        <div class="memory-body">
+          <div class="memory-date">Memory 02</div>
+          <div class="memory-title">Random Plans</div>
+          <div class="memory-desc">No agenda, no schedule — just a random idea that somehow everyone said yes to. Those unplanned moments always ended up being the ones worth remembering.</div>
+          <span class="memory-tag">✨ Unplanned & unforgettable</span>
+        </div>
+      </div>
+
+      <div class="memory-card reveal reveal-delay-3">
+        <div class="memory-img-placeholder">
+          <div class="emoji">🤍</div>
+          <div class="ph-label">Add your photo here</div>
+        </div>
+        <div class="memory-body">
+          <div class="memory-date">Memory 03</div>
+          <div class="memory-title">First Meetup</div>
+          <div class="memory-desc">The very first time all four of us were actually together in one place — a little awkward, a little exciting, and somehow already feeling like the beginning of something that would last forever.</div>
+          <span class="memory-tag">🤍 Where it began</span>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </div>
+</section>
+
+<div class="ornament-divider">✦ ✦ ✦</div>
+
+<!-- About Us Section -->
+<section class="section about-section" id="about">
+  <div class="orb about-orb-1"></div>
+  <div class="orb about-orb-2"></div>
+  <div class="section-inner">
+
+    <div class="about-header reveal">
+      <div class="section-label">✦ the four of us</div>
+      <h2 class="section-title">About <em>us</em></h2>
+      <p class="section-desc">Four different people, one unbreakable bond. Here's what each of us means to the other three.</p>
+    </div>
+
+    <!-- Group Photo -->
+    <div class="group-photo-frame reveal">
+      <div class="group-photo-inner">
+        <div class="placeholder-icon">📷</div>
+        <div class="placeholder-text">Our Group Photo</div>
+        <div class="placeholder-sub">Replace with your photo — all four of you</div>
+        <!-- To add real photo: replace the above divs with <img src="your-photo.jpg" alt="OPEN 24/7"> -->
+      </div>
+      <div class="group-photo-caption">Abhimanyu · Ridhi · Versha · Vikram</div>
+    </div>
+
+    <!-- ---- ABHIMANYU ---- -->
+    <div class="person-block reveal" id="abhimanyu">
+      <div class="person-photo-wrap">
+        <div class="person-photo-frame">
+          <div class="person-photo-inner photo-tint-a">
+            <div class="ph-emoji">🌟</div>
+            <div class="ph-name">Abhimanyu</div>
+            <div class="ph-hint">add photo here</div>
+            <!-- swap above 3 divs with: <img src="abhimanyu.jpg" alt="Abhimanyu"> -->
+          </div>
+          <div class="person-photo-caption">Abhimanyu 💜</div>
+        </div>
+        <div class="person-info">
+          <div class="person-avatar av-a" style="width:52px;height:52px;font-size:20px;">A</div>
+          <div class="person-name">Abhimanyu</div>
+          <div class="person-role">✦ the one who makes it worth it</div>
+        </div>
+      </div>
+      <div class="tributes-grid">
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Ridhi</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Versha</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Vikram</div>
+        </div>
+        <div class="tribute-card" style="border: 1.5px solid var(--lavender-300); background: var(--lavender-50);">
+          <p class="tribute-text"></p>
+          <div class="tribute-author" style="color: var(--lavender-500);">Abhimanyu · about himself</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament-divider" style="padding: 24px 0; color: var(--lavender-200);">· · ·</div>
+
+    <!-- ---- RIDHI ---- -->
+    <div class="person-block reveal" id="ridhi">
+      <div class="person-photo-wrap">
+        <div class="person-photo-frame">
+          <div class="person-photo-inner photo-tint-r">
+            <div class="ph-emoji">🌸</div>
+            <div class="ph-name">Ridhi</div>
+            <div class="ph-hint">add photo here</div>
+            <!-- swap above 3 divs with: <img src="ridhi.jpg" alt="Ridhi"> -->
+          </div>
+          <div class="person-photo-caption">Ridhi 🌸</div>
+        </div>
+        <div class="person-info">
+          <div class="person-avatar av-r" style="width:52px;height:52px;font-size:20px;">R</div>
+          <div class="person-name">Ridhi</div>
+          <div class="person-role">✦ the heart of the group</div>
+        </div>
+      </div>
+      <div class="tributes-grid">
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Abhimanyu</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Versha</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Vikram</div>
+        </div>
+        <div class="tribute-card" style="border: 1.5px solid #f9a8d4; background: #fff0f7;">
+          <p class="tribute-text"></p>
+          <div class="tribute-author" style="color: #be185d;">Ridhi · about herself</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament-divider" style="padding: 24px 0; color: var(--lavender-200);">· · ·</div>
+
+    <!-- ---- VERSHA ---- -->
+    <div class="person-block reveal" id="versha">
+      <div class="person-photo-wrap">
+        <div class="person-photo-frame">
+          <div class="person-photo-inner photo-tint-v">
+            <div class="ph-emoji">🌿</div>
+            <div class="ph-name">Versha</div>
+            <div class="ph-hint">add photo here</div>
+            <!-- swap above 3 divs with: <img src="versha.jpg" alt="Versha"> -->
+          </div>
+          <div class="person-photo-caption">Versha 🌿</div>
+        </div>
+        <div class="person-info">
+          <div class="person-avatar av-v" style="width:52px;height:52px;font-size:20px;">V</div>
+          <div class="person-name">Versha</div>
+          <div class="person-role">✦ the one who holds everyone together</div>
+        </div>
+      </div>
+      <div class="tributes-grid">
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Abhimanyu</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Ridhi</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Vikram</div>
+        </div>
+        <div class="tribute-card" style="border: 1.5px solid #6ee7b7; background: #f0fdf9;">
+          <p class="tribute-text"></p>
+          <div class="tribute-author" style="color: #065f46;">Versha · about herself</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament-divider" style="padding: 24px 0; color: var(--lavender-200);">· · ·</div>
+
+    <!-- ---- VIKRAM ---- -->
+    <div class="person-block reveal" id="vikram">
+      <div class="person-photo-wrap">
+        <div class="person-photo-frame">
+          <div class="person-photo-inner photo-tint-vk">
+            <div class="ph-emoji">🔥</div>
+            <div class="ph-name">Vikram</div>
+            <div class="ph-hint">add photo here</div>
+            <!-- swap above 3 divs with: <img src="vikram.jpg" alt="Vikram"> -->
+          </div>
+          <div class="person-photo-caption">Vikram 🔥</div>
+        </div>
+        <div class="person-info">
+          <div class="person-avatar av-vk" style="width:52px;height:52px;font-size:20px;">V</div>
+          <div class="person-name">Vikram</div>
+          <div class="person-role">✦ the energy everyone needs</div>
+        </div>
+      </div>
+      <div class="tributes-grid">
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Abhimanyu</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Ridhi</div>
+        </div>
+        <div class="tribute-card">
+          <p class="tribute-text"></p>
+          <div class="tribute-author">Versha</div>
+        </div>
+        <div class="tribute-card" style="border: 1.5px solid #fdba74; background: #fff8f0;">
+          <p class="tribute-text"></p>
+          <div class="tribute-author" style="color: #9a3412;">Vikram · about himself</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">OPEN <span>24/7</span></div>
+  <div class="footer-tagline">always open, always us 🤍</div>
+  <div class="footer-names">Abhimanyu &nbsp;·&nbsp; Ridhi &nbsp;·&nbsp; Versha &nbsp;·&nbsp; Vikram</div>
+  <div class="footer-heart">💜</div>
+</footer>
+
+<script>
+  // Floating petals
+  const petalContainer = document.getElementById('petals');
+  const petalColors = ['#c4b5fd','#ddd6fe','#f5e6f0','#e8d5f5','#f9c8e0','#a78bfa'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * -20}%;
+      background: ${petalColors[Math.floor(Math.random() * petalColors.length)]};
+      width: ${6 + Math.random() * 8}px;
+      height: ${10 + Math.random() * 10}px;
+      animation-duration: ${10 + Math.random() * 18}s;
+      animation-delay: ${Math.random() * 15}s;
+      transform: rotate(${Math.random() * 360}deg);
+    `;
+    petalContainer.appendChild(p);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const drawer = document.getElementById('mobileDrawer');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = drawer.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Close drawer when a link is tapped
+  drawer.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      hamburger.classList.remove('open');
+    });
+  });
+</script>
+</body>
+</html>
