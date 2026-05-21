@@ -763,6 +763,103 @@
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
 
+  /* ---- CLOUDINARY UPLOAD ---- */
+  .upload-zone {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-zone img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: inherit;
+  }
+
+  .upload-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(139,92,246,0.0);
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transition: background 0.25s ease, opacity 0.25s ease;
+  }
+
+  .upload-zone:hover .upload-overlay,
+  .upload-zone.empty .upload-overlay {
+    background: rgba(139,92,246,0.08);
+    opacity: 1;
+  }
+
+  .upload-zone.empty .upload-overlay { opacity: 1; background: transparent; }
+
+  .upload-btn {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(196,181,253,0.7);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--lavender-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  .upload-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 6px 20px rgba(139,92,246,0.2);
+  }
+
+  .upload-btn svg { width: 14px; height: 14px; }
+
+  .upload-hint {
+    font-size: 10px;
+    color: var(--text-light);
+    letter-spacing: 0.06em;
+  }
+
+  /* person photo upload zone */
+  .person-photo-inner .upload-zone {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+  }
+
+  /* dual memory photo slot */
+  .memory-img-placeholder.half { position: relative; overflow: hidden; }
+  .memory-img-placeholder.half .upload-zone {
+    position: absolute;
+    inset: 0;
+    border-radius: 0;
+  }
+
+  /* single memory slot */
+  .memory-img-placeholder { position: relative; overflow: hidden; }
+  .memory-img-placeholder > .upload-zone {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* group photo */
+  .group-photo-inner .upload-zone {
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+  }
+
   /* ---- HAMBURGER ---- */
   .hamburger {
     display: none;
@@ -863,6 +960,7 @@
     .tributes-grid { grid-template-columns: 1fr; }
   }
 </style>
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -932,10 +1030,30 @@
           <div class="memory-img-placeholder half">
             <div class="emoji">🎓</div>
             <div class="ph-label">photo 1</div>
+            <div class="upload-zone empty" id="zone-td1" onclick="openUpload('td1')">
+            <img id="img-td1" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('td1')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🎓 tap to upload</span>
+            </div>
+          </div>
           </div>
           <div class="memory-img-placeholder half">
             <div class="emoji">🎓</div>
             <div class="ph-label">photo 2</div>
+            <div class="upload-zone empty" id="zone-td2" onclick="openUpload('td2')">
+            <img id="img-td2" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('td2')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🎓 tap to upload</span>
+            </div>
+          </div>
           </div>
         </div>
         <div class="memory-body">
@@ -951,10 +1069,30 @@
           <div class="memory-img-placeholder half">
             <div class="emoji">🌙</div>
             <div class="ph-label">photo 1</div>
+            <div class="upload-zone empty" id="zone-rp1" onclick="openUpload('rp1')">
+            <img id="img-rp1" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('rp1')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">✨ tap to upload</span>
+            </div>
+          </div>
           </div>
           <div class="memory-img-placeholder half">
             <div class="emoji">🌙</div>
             <div class="ph-label">photo 2</div>
+            <div class="upload-zone empty" id="zone-rp2" onclick="openUpload('rp2')">
+            <img id="img-rp2" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('rp2')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">✨ tap to upload</span>
+            </div>
+          </div>
           </div>
         </div>
         <div class="memory-body">
@@ -969,6 +1107,16 @@
         <div class="memory-img-placeholder">
           <div class="emoji">🤍</div>
           <div class="ph-label">Add your photo here</div>
+          <div class="upload-zone empty" id="zone-fm1" onclick="openUpload('fm1')">
+            <img id="img-fm1" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('fm1')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🤍 tap to upload</span>
+            </div>
+          </div>
         </div>
         <div class="memory-body">
           <div class="memory-date">Memory 03</div>
@@ -1004,8 +1152,17 @@
       <div class="group-photo-inner">
         <div class="placeholder-icon">📷</div>
         <div class="placeholder-text">Our Group Photo</div>
-        <div class="placeholder-sub">Replace with your photo — all four of you</div>
-        <!-- To add real photo: replace the above divs with <img src="your-photo.jpg" alt="OPEN 24/7"> -->
+        <div class="placeholder-sub">tap the button to upload</div>
+        <div class="upload-zone empty" id="zone-group" onclick="openUpload('group')">
+            <img id="img-group" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('group')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Group Photo
+              </button>
+              <span class="upload-hint">📷 tap to upload</span>
+            </div>
+          </div>
       </div>
       <div class="group-photo-caption">Abhimanyu · Ridhi · Versha · Vikram</div>
     </div>
@@ -1017,8 +1174,17 @@
           <div class="person-photo-inner photo-tint-a">
             <div class="ph-emoji">🌟</div>
             <div class="ph-name">Abhimanyu</div>
-            <div class="ph-hint">add photo here</div>
-            <!-- swap above 3 divs with: <img src="abhimanyu.jpg" alt="Abhimanyu"> -->
+            <div class="ph-hint">tap to upload</div>
+            <div class="upload-zone empty" id="zone-a" onclick="openUpload('a')">
+            <img id="img-a" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('a')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🌟 tap to upload</span>
+            </div>
+          </div>
           </div>
           <div class="person-photo-caption">Abhimanyu 💜</div>
         </div>
@@ -1057,8 +1223,17 @@
           <div class="person-photo-inner photo-tint-r">
             <div class="ph-emoji">🌸</div>
             <div class="ph-name">Ridhi</div>
-            <div class="ph-hint">add photo here</div>
-            <!-- swap above 3 divs with: <img src="ridhi.jpg" alt="Ridhi"> -->
+            <div class="ph-hint">tap to upload</div>
+            <div class="upload-zone empty" id="zone-r" onclick="openUpload('r')">
+            <img id="img-r" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('r')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🌸 tap to upload</span>
+            </div>
+          </div>
           </div>
           <div class="person-photo-caption">Ridhi 🌸</div>
         </div>
@@ -1097,8 +1272,17 @@
           <div class="person-photo-inner photo-tint-v">
             <div class="ph-emoji">🌿</div>
             <div class="ph-name">Versha</div>
-            <div class="ph-hint">add photo here</div>
-            <!-- swap above 3 divs with: <img src="versha.jpg" alt="Versha"> -->
+            <div class="ph-hint">tap to upload</div>
+            <div class="upload-zone empty" id="zone-v" onclick="openUpload('v')">
+            <img id="img-v" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('v')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🌿 tap to upload</span>
+            </div>
+          </div>
           </div>
           <div class="person-photo-caption">Versha 🌿</div>
         </div>
@@ -1137,8 +1321,17 @@
           <div class="person-photo-inner photo-tint-vk">
             <div class="ph-emoji">🔥</div>
             <div class="ph-name">Vikram</div>
-            <div class="ph-hint">add photo here</div>
-            <!-- swap above 3 divs with: <img src="vikram.jpg" alt="Vikram"> -->
+            <div class="ph-hint">tap to upload</div>
+            <div class="upload-zone empty" id="zone-vk" onclick="openUpload('vk')">
+            <img id="img-vk" src="" alt="" style="display:none;">
+            <div class="upload-overlay">
+              <button class="upload-btn" onclick="event.stopPropagation();openUpload('vk')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+              </button>
+              <span class="upload-hint">🔥 tap to upload</span>
+            </div>
+          </div>
           </div>
           <div class="person-photo-caption">Vikram 🔥</div>
         </div>
@@ -1180,7 +1373,76 @@
 </footer>
 
 <script>
-  // Floating petals
+  // ---- CLOUDINARY CONFIG ----
+  const CLD_CLOUD = 'dir0r0ixp';
+  const CLD_PRESET = 'open247_upload';
+
+  function openUpload(zoneId, multi = false) {
+    const widget = cloudinary.createUploadWidget({
+      cloudName: CLD_CLOUD,
+      uploadPreset: CLD_PRESET,
+      multiple: multi,
+      maxFiles: multi ? 2 : 1,
+      resourceType: 'auto',
+      sources: ['local', 'camera', 'url'],
+      styles: {
+        palette: {
+          window: '#FDF9F0',
+          windowBorder: '#C4B5FD',
+          tabIcon: '#8B5CF6',
+          menuIcons: '#8B5CF6',
+          textDark: '#2D2438',
+          textLight: '#8B7FAA',
+          link: '#8B5CF6',
+          action: '#8B5CF6',
+          inactiveTabIcon: '#A78BFA',
+          error: '#F87171',
+          inProgress: '#C4B5FD',
+          complete: '#6EE7B7',
+          sourceBg: '#F5F3FF'
+        },
+        fonts: { default: null, "'DM Sans', sans-serif": { url: 'https://fonts.googleapis.com/css2?family=DM+Sans', active: true } }
+      }
+    }, (error, result) => {
+      if (!error && result && result.event === 'success') {
+        const url = result.info.secure_url;
+        const zone = document.getElementById('zone-' + zoneId);
+        const img = document.getElementById('img-' + zoneId);
+        if (img) {
+          img.src = url;
+          img.style.display = 'block';
+          zone.classList.remove('empty');
+        }
+        // Save to localStorage so it persists on reload
+        const saved = JSON.parse(localStorage.getItem('open247_photos') || '{}');
+        if (saved[zoneId]) {
+          saved[zoneId] = Array.isArray(saved[zoneId]) ? [...saved[zoneId], url] : [saved[zoneId], url];
+        } else {
+          saved[zoneId] = url;
+        }
+        localStorage.setItem('open247_photos', JSON.stringify(saved));
+        widget.close();
+      }
+    });
+    widget.open();
+  }
+
+  // Restore saved photos on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = JSON.parse(localStorage.getItem('open247_photos') || '{}');
+    Object.entries(saved).forEach(([zoneId, url]) => {
+      const zone = document.getElementById('zone-' + zoneId);
+      const img = document.getElementById('img-' + zoneId);
+      if (img && zone) {
+        const urls = Array.isArray(url) ? url : [url];
+        img.src = urls[urls.length - 1];
+        img.style.display = 'block';
+        zone.classList.remove('empty');
+      }
+    });
+  });
+
+  // ---- Floating petals
   const petalContainer = document.getElementById('petals');
   const petalColors = ['#c4b5fd','#ddd6fe','#f5e6f0','#e8d5f5','#f9c8e0','#a78bfa'];
   for (let i = 0; i < 22; i++) {
