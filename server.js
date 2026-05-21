@@ -10,9 +10,9 @@ app.use(express.json());
 
 // Cloudinary configuration
 cloudinary.config({
-  cloud_name: 'dir0r0ixp',
-  api_key: '114673719219284',
-  api_secret: 'RYXUWS7wq6i7h6vHkO42OVWA1Jo'
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 // Path to store images data
