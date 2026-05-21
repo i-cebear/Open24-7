@@ -1,9 +1,17 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cloudinary = require('cloudinary').v2;
 const app = express();
 
 app.use(express.json());
+
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: 'dir0r0ixp',
+  api_key: '114673719219284',
+  api_secret: 'RYXUWS7wq6i7h6vHkO42OVWA1Jo'
+});
 
 // Path to store images data
 const imagesFile = path.join(__dirname, 'images-data.json');
@@ -48,6 +56,17 @@ app.post('/api/save-image', (req, res) => {
     console.error('Error saving image:', err);
     res.status(500).json({ error: 'Failed to save image' });
   }
+});
+
+// Endpoint to get a signed upload signature
+app.post('/api/sign-upload', (req, res) => {
+  const { public_id, timestamp } = req.body;
+  if (!public_id || !timestamp) return res.status(400).json({ error: 'Missing public_id or timestamp' });
+  const signature = cloudinary.utils.api_sign_request(
+    { public_id, timestamp, folder: 'open247' },
+    cloudinary.config().api_secret
+  );
+  res.json({ signature });
 });
 
 // Start server

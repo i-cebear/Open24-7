@@ -1578,16 +1578,36 @@
     }
   });
 
-  function openUpload(zoneId) {
+  async function openUpload(zoneId) {
     const publicId = ZONE_PUBLIC_IDS[zoneId];
+    const timestamp = Math.floor(Date.now() / 1000);
+
+    // Get signature from backend
+    let signature;
+    try {
+      const sigRes = await fetch(`${BACKEND_URL}/api/sign-upload`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ public_id: publicId, timestamp })
+      });
+      const sigData = await sigRes.json();
+      signature = sigData.signature;
+      if (!signature) throw new Error('No signature returned');
+    } catch (e) {
+      showToast('error', 'Could not get upload signature', e.message);
+      return;
+    }
+
+    // Open Cloudinary upload widget with signature
     const widget = cloudinary.createUploadWidget({
       cloudName: CLD_CLOUD,
       uploadPreset: CLD_PRESET,
       multiple: false,
       resourceType: 'image',
-      sources: ['local', 'camera', 'url'],
       folder: 'open247',
-      publicId: publicId, // Always use fixed publicId for each zone
+      publicId: publicId,
+      uploadSignature: signature,
+      uploadSignatureTimestamp: timestamp,
       styles: {
         palette: {
           window: '#FDF9F0',
@@ -1623,7 +1643,6 @@
       }
 
       if (result && result.event === 'success') {
-        // Always use the fixed Cloudinary URL for this zone
         const url = getCldUrl(publicId);
         setZoneImage(zoneId, url);
         saveImageToStorage(zoneId, url);
