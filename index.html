@@ -1460,6 +1460,11 @@
     'vk':    'open247/vikram',
   };
 
+  // ---- BACKEND CONFIG ----
+  // Set this to your backend server's public URL
+  // Example: 'https://open24-7-backend.onrender.com'
+  const BACKEND_URL = 'https://open24-7-backend.onrender.com';
+
   // ---- TOAST HELPERS ----
   let toastTimer = null;
   function showToast(type, title, detail = '') {
@@ -1521,7 +1526,7 @@
   // Save to backend (GitHub or your server)
   async function saveToBackend(zoneId, url) {
     try {
-      const response = await fetch('/api/save-image', {
+      const response = await fetch(`${BACKEND_URL}/api/save-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ zoneId, url })
@@ -1535,7 +1540,7 @@
   // Load images from backend for cross-device sync
   async function loadImagesFromBackend() {
     try {
-      const response = await fetch('/api/get-images');
+      const response = await fetch(`${BACKEND_URL}/api/get-images`);
       if (response.ok) {
         const data = await response.json();
         return data || {};
