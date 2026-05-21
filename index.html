@@ -1579,6 +1579,7 @@
   });
 
   function openUpload(zoneId) {
+    const publicId = ZONE_PUBLIC_IDS[zoneId];
     const widget = cloudinary.createUploadWidget({
       cloudName: CLD_CLOUD,
       uploadPreset: CLD_PRESET,
@@ -1586,6 +1587,7 @@
       resourceType: 'image',
       sources: ['local', 'camera', 'url'],
       folder: 'open247',
+      publicId: publicId, // Always use fixed publicId for each zone
       styles: {
         palette: {
           window: '#FDF9F0',
@@ -1621,9 +1623,8 @@
       }
 
       if (result && result.event === 'success') {
-        // Use the URL from the result directly — this works even if Cloudinary
-        // assigned a different public_id than we requested.
-        const url = result.info.secure_url;
+        // Always use the fixed Cloudinary URL for this zone
+        const url = getCldUrl(publicId);
         setZoneImage(zoneId, url);
         saveImageToStorage(zoneId, url);
         showToast('success', 'Photo uploaded! ✨', result.info.public_id);
