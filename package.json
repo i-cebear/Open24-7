@@ -7,10 +7,16 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["memories", "friends", "photos"],
+  "keywords": [
+    "memories",
+    "friends",
+    "photos"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
     "express": "^4.18.2"
   }
 }
