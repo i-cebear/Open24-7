@@ -1,3 +1,9 @@
+// Debug: Log Cloudinary environment variables (do not log secrets in production)
+console.log('Cloudinary ENV:', {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET ? '***' : undefined
+});
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
