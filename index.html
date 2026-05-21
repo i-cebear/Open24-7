@@ -1551,11 +1551,10 @@
     return {};
   }
 
-  // On load — load from backend first (cross-device), then localStorage (offline), then Cloudinary
+  // On load — load from backend first (cross-device), then Cloudinary (no localStorage for sync)
   window.addEventListener('DOMContentLoaded', async () => {
     // Try to load from backend first (has latest from all devices)
     const backendData = await loadImagesFromBackend();
-    
     for (const [zoneId, publicId] of Object.entries(ZONE_PUBLIC_IDS)) {
       let url = null;
 
@@ -1563,23 +1562,18 @@
       if (backendData[zoneId]) {
         url = backendData[zoneId];
         setZoneImage(zoneId, url);
-        localStorage.setItem('open247_' + zoneId, url); // Update local cache
+        // Optionally update localStorage for offline fallback
+        localStorage.setItem('open247_' + zoneId, url);
         continue;
       }
 
-      // 2. Fall back to localStorage (offline support)
-      url = getImageFromStorage(zoneId);
-      if (url) {
-        setZoneImage(zoneId, url);
-        continue;
-      }
-
-      // 3. Fall back to Cloudinary with fixed public ID
+      // 2. Fall back to Cloudinary with fixed public ID
       url = getCldUrl(publicId);
       const exists = await checkImageExists(url);
       if (exists) {
         setZoneImage(zoneId, url);
-        saveImageToStorage(zoneId, url);
+        // Optionally update localStorage for offline fallback
+        localStorage.setItem('open247_' + zoneId, url);
       }
     }
   });
