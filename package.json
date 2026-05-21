@@ -1,0 +1,16 @@
+{
+  "name": "open247",
+  "version": "1.0.0",
+  "description": "Open 24/7 - A memory sharing platform for friends",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["memories", "friends", "photos"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1498,31 +1498,95 @@
     } catch { return false; }
   }
 
-  // On load — try to pull each image from Cloudinary by its fixed public ID
+  // Store uploaded URLs in localStorage AND send to backend to sync across devices
+  async function saveImageToStorage(zoneId, url) {
+    try {
+      localStorage.setItem('open247_' + zoneId, url);
+      // Also save to a JSON file on your server/GitHub for cross-device sync
+      await saveToBackend(zoneId, url);
+    } catch (e) {
+      console.warn('localStorage unavailable:', e);
+    }
+  }
+
+  function getImageFromStorage(zoneId) {
+    try {
+      return localStorage.getItem('open247_' + zoneId);
+    } catch (e) {
+      console.warn('localStorage unavailable:', e);
+      return null;
+    }
+  }
+
+  // Save to backend (GitHub or your server)
+  async function saveToBackend(zoneId, url) {
+    try {
+      const response = await fetch('/api/save-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ zoneId, url })
+      });
+      if (!response.ok) console.warn('Backend save failed');
+    } catch (e) {
+      console.warn('Backend save error (optional):', e);
+    }
+  }
+
+  // Load images from backend for cross-device sync
+  async function loadImagesFromBackend() {
+    try {
+      const response = await fetch('/api/get-images');
+      if (response.ok) {
+        const data = await response.json();
+        return data || {};
+      }
+    } catch (e) {
+      console.warn('Backend load error:', e);
+    }
+    return {};
+  }
+
+  // On load — load from backend first (cross-device), then localStorage (offline), then Cloudinary
   window.addEventListener('DOMContentLoaded', async () => {
+    // Try to load from backend first (has latest from all devices)
+    const backendData = await loadImagesFromBackend();
+    
     for (const [zoneId, publicId] of Object.entries(ZONE_PUBLIC_IDS)) {
-      const url = getCldUrl(publicId);
+      let url = null;
+
+      // 1. Check backend first (cross-device sync)
+      if (backendData[zoneId]) {
+        url = backendData[zoneId];
+        setZoneImage(zoneId, url);
+        localStorage.setItem('open247_' + zoneId, url); // Update local cache
+        continue;
+      }
+
+      // 2. Fall back to localStorage (offline support)
+      url = getImageFromStorage(zoneId);
+      if (url) {
+        setZoneImage(zoneId, url);
+        continue;
+      }
+
+      // 3. Fall back to Cloudinary with fixed public ID
+      url = getCldUrl(publicId);
       const exists = await checkImageExists(url);
-      if (exists) setZoneImage(zoneId, url);
+      if (exists) {
+        setZoneImage(zoneId, url);
+        saveImageToStorage(zoneId, url);
+      }
     }
   });
 
   function openUpload(zoneId) {
-    const publicId = ZONE_PUBLIC_IDS[zoneId];
-
     const widget = cloudinary.createUploadWidget({
       cloudName: CLD_CLOUD,
       uploadPreset: CLD_PRESET,
       multiple: false,
       resourceType: 'image',
       sources: ['local', 'camera', 'url'],
-      // NOTE: publicId override works with unsigned presets IF the preset
-      // doesn't block it. If uploads succeed but use a random ID, remove
-      // the publicId line and the image will still show after upload via result.secure_url.
-      publicId: publicId,
       folder: 'open247',
-      // overwrite removed — the preset controls this; setting it here on
-      // unsigned uploads is ignored and can confuse the response.
       styles: {
         palette: {
           window: '#FDF9F0',
@@ -1562,6 +1626,7 @@
         // assigned a different public_id than we requested.
         const url = result.info.secure_url;
         setZoneImage(zoneId, url);
+        saveImageToStorage(zoneId, url);
         showToast('success', 'Photo uploaded! ✨', result.info.public_id);
         widget.close();
       }
