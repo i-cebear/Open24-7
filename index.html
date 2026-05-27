@@ -85,6 +85,30 @@
     overflow: hidden;
   }
 
+  /* Animated gradient overlay */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(196,181,253,0.3) 0%,
+      rgba(249,168,212,0.2) 25%,
+      rgba(167,139,250,0.25) 50%,
+      rgba(245,230,240,0.3) 75%,
+      rgba(196,181,253,0.3) 100%
+    );
+    background-size: 400% 400%;
+    animation: heroGradient 12s ease infinite;
+    z-index: 0;
+  }
+
+  @keyframes heroGradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   .hero-orb-1 {
     width: 520px; height: 520px;
     background: #c4b5fd;
@@ -138,6 +162,7 @@
     letter-spacing: -0.02em;
     animation: fadeUp 0.8s 0.1s ease both;
     position: relative; z-index: 2;
+    text-shadow: 0 2px 40px rgba(139,92,246,0.08);
   }
 
   .hero-title em {
