@@ -985,49 +985,59 @@
   .hamburger {
     display: none;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 8px;
     z-index: 200;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .hamburger span {
     display: block;
-    width: 24px;
+    width: 22px;
     height: 2.5px;
     background: var(--text-mid);
     border-radius: 100px;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6), 
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.3s ease;
     transform-origin: center;
   }
 
-  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span {
+    background: var(--lavender-600);
+  }
+
+  .hamburger.open span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
 
   /* Mobile drawer */
   .mobile-drawer {
     display: none;
     position: fixed;
-    top: 60px;
+    top: 56px;
     left: 0; right: 0;
-    background: rgba(237, 233, 254, 0.25);
-    backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
-    -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
+    background: rgba(253, 249, 240, 0.92);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
     border-bottom: 1px solid rgba(196,181,253,0.35);
-    box-shadow: 0 16px 48px rgba(139,92,246,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+    box-shadow: 0 16px 48px rgba(139,92,246,0.12);
     z-index: 99;
-    padding: 0 24px;
+    padding: 0 20px;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 0 24px 24px;
   }
 
   .mobile-drawer.open {
-    max-height: 420px;
-    padding: 8px 20px 20px;
+    max-height: 460px;
+    padding: 12px 20px 24px;
   }
 
   .mobile-drawer a {
