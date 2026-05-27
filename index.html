@@ -590,6 +590,65 @@
     color: var(--lavender-400);
   }
 
+  /* Tribute edit & placeholder */
+  .tribute-placeholder {
+    color: var(--text-light);
+    font-style: italic;
+    opacity: 0.7;
+  }
+  .tribute-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+  .tribute-edit-btn {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid var(--lavender-200);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .tribute-card:hover .tribute-edit-btn { opacity: 1; }
+  .tribute-edit-btn:hover { transform: scale(1.1); }
+
+  /* Tribute inline edit mode */
+  .tribute-textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--lavender-300);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-mid);
+    line-height: 1.7;
+    resize: vertical;
+    background: white;
+    outline: none;
+  }
+  .tribute-textarea:focus { border-color: var(--lavender-500); }
+  .tribute-save-btn {
+    margin-top: 8px;
+    padding: 6px 16px;
+    background: var(--lavender-500);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .tribute-save-btn:hover { background: var(--lavender-600); }
+
   /* ---- PERSON PHOTO ---- */
   .person-photo-wrap {
     display: flex;
@@ -1538,20 +1597,24 @@
         </div>
       </div>
       <div class="tributes-grid">
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="abhimanyu" data-author="Ridhi">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Ridhi</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="abhimanyu" data-author="Versha">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Versha</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="abhimanyu" data-author="Vikram">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Vikram</div>
         </div>
-        <div class="tribute-card" style="border: 1.5px solid var(--lavender-300); background: var(--lavender-50);">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="abhimanyu" data-author="Abhimanyu" style="border: 1.5px solid var(--lavender-300); background: var(--lavender-50);">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author" style="color: var(--lavender-500);">Abhimanyu · about himself</div>
         </div>
       </div>
@@ -1587,20 +1650,24 @@
         </div>
       </div>
       <div class="tributes-grid">
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="ridhi" data-author="Abhimanyu">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Abhimanyu</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="ridhi" data-author="Versha">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Versha</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="ridhi" data-author="Vikram">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Vikram</div>
         </div>
-        <div class="tribute-card" style="border: 1.5px solid #f9a8d4; background: #fff0f7;">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="ridhi" data-author="Ridhi" style="border: 1.5px solid #f9a8d4; background: #fff0f7;">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author" style="color: #be185d;">Ridhi · about herself</div>
         </div>
       </div>
@@ -1636,20 +1703,24 @@
         </div>
       </div>
       <div class="tributes-grid">
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="versha" data-author="Abhimanyu">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Abhimanyu</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="versha" data-author="Ridhi">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Ridhi</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="versha" data-author="Vikram">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Vikram</div>
         </div>
-        <div class="tribute-card" style="border: 1.5px solid #6ee7b7; background: #f0fdf9;">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="versha" data-author="Versha" style="border: 1.5px solid #6ee7b7; background: #f0fdf9;">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author" style="color: #065f46;">Versha · about herself</div>
         </div>
       </div>
@@ -1685,20 +1756,24 @@
         </div>
       </div>
       <div class="tributes-grid">
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="vikram" data-author="Abhimanyu">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Abhimanyu</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="vikram" data-author="Ridhi">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Ridhi</div>
         </div>
-        <div class="tribute-card">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="vikram" data-author="Versha">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author">Versha</div>
         </div>
-        <div class="tribute-card" style="border: 1.5px solid #fdba74; background: #fff8f0;">
-          <p class="tribute-text"></p>
+        <div class="tribute-card" data-person="vikram" data-author="Vikram" style="border: 1.5px solid #fdba74; background: #fff8f0;">
+          <p class="tribute-text"><span class="tribute-placeholder">Tap to write something...</span></p>
+          <div class="tribute-actions"><button class="tribute-edit-btn" onclick="editTribute(this)">✏️</button></div>
           <div class="tribute-author" style="color: #9a3412;">Vikram · about himself</div>
         </div>
       </div>
@@ -2081,6 +2156,86 @@
 
   // Call after DOM is ready
   loadMemories();
+
+  // ---- Tributes (editable short notes) ----
+  function editTribute(btn) {
+    const card = btn.closest('.tribute-card');
+    const textEl = card.querySelector('.tribute-text');
+    const currentText = textEl.querySelector('.tribute-placeholder') ? '' : textEl.textContent.trim();
+
+    // Replace text with textarea
+    const textarea = document.createElement('textarea');
+    textarea.className = 'tribute-textarea';
+    textarea.value = currentText;
+    textarea.placeholder = 'Write something nice...';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'tribute-save-btn';
+    saveBtn.textContent = 'Save';
+
+    textEl.innerHTML = '';
+    textEl.appendChild(textarea);
+    textEl.appendChild(saveBtn);
+    textarea.focus();
+
+    // Hide edit button while editing
+    btn.style.display = 'none';
+
+    saveBtn.addEventListener('click', async () => {
+      const newText = textarea.value.trim();
+      const personId = card.dataset.person;
+      const author = card.dataset.author;
+
+      saveBtn.textContent = 'Saving...';
+      saveBtn.disabled = true;
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tributes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ personId, author, text: newText })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (newText) {
+            textEl.innerHTML = `<span>${newText}</span>`;
+          } else {
+            textEl.innerHTML = '<span class="tribute-placeholder">Tap to write something...</span>';
+          }
+          showToast('success', 'Note saved! ✨');
+        } else {
+          showToast('error', 'Failed to save', data.error);
+          textEl.innerHTML = currentText ? `<span>${currentText}</span>` : '<span class="tribute-placeholder">Tap to write something...</span>';
+        }
+      } catch (e) {
+        showToast('error', 'Could not reach server', e.message);
+        textEl.innerHTML = currentText ? `<span>${currentText}</span>` : '<span class="tribute-placeholder">Tap to write something...</span>';
+      }
+
+      btn.style.display = '';
+    });
+  }
+
+  // Load tributes from backend
+  async function loadTributes() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tributes`);
+      if (res.ok) {
+        const tributes = await res.json();
+        tributes.forEach(t => {
+          const card = document.querySelector(`.tribute-card[data-person="${t.personId}"][data-author="${t.author}"]`);
+          if (card && t.text) {
+            const textEl = card.querySelector('.tribute-text');
+            textEl.innerHTML = `<span>${t.text}</span>`;
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('Could not load tributes:', e.message);
+    }
+  }
+
+  loadTributes();
 </script>
 </body>
 </html>

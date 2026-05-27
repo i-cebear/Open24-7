@@ -46,6 +46,16 @@ const memorySchema = new mongoose.Schema({
 
 const Memory = mongoose.model('Memory', memorySchema);
 
+// Schema for tribute notes (the short notes on person cards)
+const tributeSchema = new mongoose.Schema({
+  personId: { type: String, required: true },
+  author: { type: String, required: true },
+  text: { type: String, default: '' }
+}, { timestamps: true });
+
+tributeSchema.index({ personId: 1, author: 1 }, { unique: true });
+const Tribute = mongoose.model('Tribute', tributeSchema);
+
 // Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -101,6 +111,39 @@ app.post('/api/sign-upload', (req, res) => {
   const paramsToSign = { public_id, timestamp };
   const signature = cloudinary.utils.api_sign_request(paramsToSign, secret);
   res.json({ signature, api_key: cloudinary.config().api_key });
+});
+
+// ---- TRIBUTES API ----
+
+// Get all tributes
+app.get('/api/tributes', async (req, res) => {
+  try {
+    const tributes = await Tribute.find({});
+    res.json(tributes);
+  } catch (err) {
+    console.error('Error reading tributes:', err.message);
+    res.json([]);
+  }
+});
+
+// Save or update a tribute
+app.post('/api/tributes', async (req, res) => {
+  const { personId, author, text } = req.body;
+  if (!personId || !author) {
+    return res.status(400).json({ error: 'Missing personId or author' });
+  }
+
+  try {
+    const tribute = await Tribute.findOneAndUpdate(
+      { personId, author },
+      { personId, author, text: text || '' },
+      { upsert: true, new: true }
+    );
+    res.json({ success: true, tribute });
+  } catch (err) {
+    console.error('Error saving tribute:', err.message);
+    res.status(500).json({ error: 'Failed to save tribute' });
+  }
 });
 
 // ---- MEMORIES API ----
