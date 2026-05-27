@@ -1,6 +1,5 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const cloudinary = require('cloudinary').v2;
 const cors = require('cors');
 
@@ -13,12 +12,28 @@ if (compression) app.use(compression());
 app.use(cors());
 app.use(express.json());
 
-// Serve static files with cache headers
+// Serve static files
 app.use(express.static(__dirname, {
   maxAge: '1h',
   etag: true,
   lastModified: true
 }));
+
+// MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI
+  || 'mongodb+srv://sainiabhimanyu155_db_user:155155@cluster0.uwnhkff.mongodb.net/open247?appname=Cluster0';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err.message));
+
+// Schema for stored images
+const imageSchema = new mongoose.Schema({
+  zoneId: { type: String, required: true, unique: true },
+  url: { type: String, required: true }
+}, { timestamps: true });
+
+const Image = mongoose.model('Image', imageSchema);
 
 // Cloudinary configuration
 cloudinary.config({
@@ -27,49 +42,32 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Path to store images data
-const imagesFile = path.join(__dirname, 'images-data.json');
-
-// Initialize file if it doesn't exist or is invalid
-function readImagesData() {
-  try {
-    if (fs.existsSync(imagesFile)) {
-      const raw = fs.readFileSync(imagesFile, 'utf8');
-      const data = JSON.parse(raw);
-      return typeof data === 'object' && data !== null ? data : {};
-    }
-  } catch (err) {
-    console.error('Error reading images file, resetting:', err.message);
-  }
-  return {};
-}
-
-function writeImagesData(data) {
-  fs.writeFileSync(imagesFile, JSON.stringify(data, null, 2));
-}
-
-// Ensure file exists on startup
-if (!fs.existsSync(imagesFile)) {
-  writeImagesData({});
-}
-
 // Get all stored images
-app.get('/api/get-images', (req, res) => {
-  const data = readImagesData();
-  res.json(data);
+app.get('/api/get-images', async (req, res) => {
+  try {
+    const images = await Image.find({});
+    const data = {};
+    images.forEach(img => { data[img.zoneId] = img.url; });
+    res.json(data);
+  } catch (err) {
+    console.error('Error reading images:', err.message);
+    res.json({});
+  }
 });
 
 // Save an image URL
-app.post('/api/save-image', (req, res) => {
+app.post('/api/save-image', async (req, res) => {
   const { zoneId, url } = req.body;
   if (!zoneId || !url) {
     return res.status(400).json({ error: 'Missing zoneId or url' });
   }
 
   try {
-    const data = readImagesData();
-    data[zoneId] = url;
-    writeImagesData(data);
+    await Image.findOneAndUpdate(
+      { zoneId },
+      { zoneId, url },
+      { upsert: true, new: true }
+    );
     res.json({ success: true, zoneId, url });
   } catch (err) {
     console.error('Error saving image:', err.message);
@@ -77,7 +75,7 @@ app.post('/api/save-image', (req, res) => {
   }
 });
 
-// Endpoint to get a signed upload signature
+// Signed upload signature
 app.post('/api/sign-upload', (req, res) => {
   const { public_id, timestamp } = req.body;
   if (!public_id || !timestamp) {

@@ -1452,10 +1452,7 @@
   const CLD_FOLDER = 'open247';
 
   // ---- BACKEND CONFIG ----
-  // If served via Express, use same origin. If opened as file://, fall back to localhost:3000
-  const BACKEND_URL = window.location.protocol === 'file:'
-    ? 'http://localhost:3000'
-    : window.location.origin;
+  const BACKEND_URL = 'https://open24-7-backend.onrender.com';
 
   // ---- TOAST HELPERS ----
   let toastTimer = null;
@@ -1486,8 +1483,8 @@
     }
   }
 
-  // Save image URL to backend for cross-device sync
-  async function saveImageToBackend(zoneId, url) {
+  // Save image URL to backend for cross-device persistence
+  async function saveImage(zoneId, url) {
     try {
       const response = await fetch(`${BACKEND_URL}/api/save-image`, {
         method: 'POST',
@@ -1500,7 +1497,7 @@
     }
   }
 
-  // On load — load saved images from backend, then check Cloudinary in parallel for any missing
+  // On load — fetch saved image URLs from backend
   window.addEventListener('DOMContentLoaded', async () => {
     let backendData = {};
     try {
@@ -1510,7 +1507,6 @@
       console.warn('Backend load error:', e.message);
     }
 
-    // For zones already in backend, set immediately
     const missingZones = [];
     for (const [zoneId, publicId] of Object.entries(ZONE_PUBLIC_IDS)) {
       if (backendData[zoneId]) {
@@ -1520,7 +1516,7 @@
       }
     }
 
-    // Check Cloudinary in parallel for any zones not in backend
+    // For zones not in backend, check if image exists on Cloudinary with fixed public ID
     if (missingZones.length > 0) {
       const checks = missingZones.map(async ({ zoneId, publicId }) => {
         const url = getCldUrl(publicId);
@@ -1528,7 +1524,7 @@
           const res = await fetch(url, { method: 'HEAD' });
           if (res.ok) {
             setZoneImage(zoneId, url);
-            saveImageToBackend(zoneId, url); // sync back to backend
+            saveImage(zoneId, url);
           }
         } catch { /* image doesn't exist yet */ }
       });
@@ -1547,6 +1543,7 @@
       resourceType: 'image',
       sources: ['local', 'camera', 'url'],
       publicId: fullPublicId,
+      overwrite: true,
       styles: {
         palette: {
           window: '#FDF9F0',
@@ -1606,7 +1603,7 @@
       if (result && result.event === 'success') {
         const url = result.info.secure_url;
         setZoneImage(zoneId, url);
-        saveImageToBackend(zoneId, url);
+        saveImage(zoneId, url);
         showToast('success', 'Photo uploaded! ✨', publicId);
         widget.close();
       }
