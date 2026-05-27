@@ -750,16 +750,17 @@
   .photo-tint-v { background: linear-gradient(145deg, #ecfdf5, #d1fae5); }
   .photo-tint-vk { background: linear-gradient(145deg, #fff7ed, #fde8cf); }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .person-photo-wrap {
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
     }
-    .person-photo-frame { width: 160px; }
-    .person-photo-inner { width: 160px; height: 190px; }
+    .person-photo-frame { width: 150px; }
+    .person-photo-inner { width: 150px; height: 180px; }
     .person-info { align-items: center; text-align: center; }
     .person-role { text-align: center; }
+    .person-photo-caption { font-size: 13px; }
   }
 
   /* ---- DIVIDER ---- */
@@ -890,6 +891,8 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     font-family: 'DM Sans', sans-serif;
     letter-spacing: 0.02em;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .upload-btn:hover {
@@ -1009,6 +1012,9 @@
     text-decoration: none;
     background: transparent;
     transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px;
   }
 
   .mobile-drawer a:last-child { border-bottom: none; }
@@ -1037,13 +1043,93 @@
   }
 
   /* ---- RESPONSIVE ---- */
-  @media (max-width: 640px) {
-    nav { padding: 0 20px; }
+  @media (max-width: 768px) {
+    /* Nav */
+    nav { padding: 0 16px; height: 56px; }
     .nav-links { display: none; }
     .hamburger { display: flex; }
     .mobile-drawer { display: block; }
-    .person-header { flex-direction: column; align-items: flex-start; }
-    .tributes-grid { grid-template-columns: 1fr; }
+
+    /* Hero */
+    .hero { padding: 60px 20px 40px; min-height: 90vh; }
+    .hero-title { font-size: clamp(48px, 16vw, 80px); }
+    .hero-badge { font-size: 10px; padding: 5px 14px; margin-bottom: 24px; }
+    .hero-subtitle { font-size: 18px; margin-top: 14px; }
+    .hero-names { gap: 8px; margin-top: 24px; }
+    .hero-name-tag { padding: 6px 16px; font-size: 13px; }
+    .hero-scroll { margin-top: 40px; }
+    .hero-orb-1 { width: 300px; height: 300px; top: -100px; left: -80px; }
+    .hero-orb-2 { width: 250px; height: 250px; top: -40px; right: -60px; }
+    .hero-orb-3 { width: 220px; height: 220px; }
+
+    /* Sections */
+    .section { padding: 60px 16px; }
+    .section-title { font-size: clamp(28px, 8vw, 42px); }
+    .section-desc { font-size: 14px; }
+    .section-label { font-size: 10px; }
+
+    /* Memories */
+    .memories-header { margin-bottom: 36px; }
+    .memories-grid { grid-template-columns: 1fr; gap: 20px; }
+    .memory-body { padding: 18px 18px 20px; }
+    .memory-title { font-size: 18px; }
+    .memory-desc { font-size: 13px; }
+
+    /* About */
+    .about-header { margin-bottom: 40px; }
+    .group-photo-frame { margin: 0 auto 50px; }
+    .group-photo-caption { font-size: 15px; }
+
+    /* Person blocks */
+    .person-block { margin-bottom: 60px; }
+    .person-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .person-name { font-size: 26px; }
+    .person-role { font-size: 11px; }
+
+    /* Tributes */
+    .tributes-grid { grid-template-columns: 1fr; gap: 14px; }
+    .tribute-card { padding: 18px 16px 16px; }
+    .tribute-card::before { font-size: 44px; }
+    .tribute-text { font-size: 13px; }
+    .tribute-edit-btn { opacity: 1; }
+
+    /* Footer */
+    footer { padding: 40px 20px; }
+    .footer-logo { font-size: 32px; }
+    .footer-tagline { font-size: 16px; }
+    .footer-names { font-size: 12px; }
+
+    /* Lightbox */
+    .lightbox img { max-width: 95vw; max-height: 60vh; border-radius: 12px; }
+    .lightbox-buttons { flex-direction: column; gap: 10px; }
+    .lightbox-download, .lightbox-delete { padding: 10px 24px; font-size: 13px; }
+    .lightbox-close { top: 12px; right: 12px; width: 38px; height: 38px; }
+
+    /* Modal */
+    .modal-card { padding: 28px 20px; border-radius: 20px; }
+    .modal-title { font-size: 20px; margin-bottom: 18px; }
+
+    /* Add memory button */
+    .add-memory-btn { padding: 12px 24px; font-size: 14px; }
+
+    /* Orbs - smaller on mobile for performance */
+    .mem-orb-1 { width: 300px; height: 300px; }
+    .mem-orb-2 { width: 200px; height: 200px; }
+    .about-orb-1 { width: 250px; height: 250px; }
+    .about-orb-2 { width: 220px; height: 220px; }
+
+    /* Dividers */
+    .ornament-divider { padding: 24px 0; font-size: 16px; letter-spacing: 10px; }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 380px) {
+    .hero-title { font-size: 44px; }
+    .hero-names { flex-direction: column; align-items: center; }
+    .hero-name-tag { width: 100%; text-align: center; }
+    .section { padding: 48px 14px; }
+    .memory-body { padding: 14px 14px 16px; }
+    .modal-card { padding: 24px 16px; }
   }
 
   /* ---- REDUCED MOTION ---- */
