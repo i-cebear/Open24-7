@@ -1536,14 +1536,12 @@
     const publicId = ZONE_PUBLIC_IDS[zoneId];
     const fullPublicId = `${CLD_FOLDER}/${publicId}`;
 
-    // Try signed upload first, fall back to unsigned preset
-    let widgetConfig = {
+    const widget = cloudinary.createUploadWidget({
       cloudName: CLD_CLOUD,
+      uploadPreset: 'open247_uploads',
       multiple: false,
       resourceType: 'image',
       sources: ['local', 'camera', 'url'],
-      publicId: fullPublicId,
-      overwrite: true,
       styles: {
         palette: {
           window: '#FDF9F0',
@@ -1568,31 +1566,7 @@
           }
         }
       }
-    };
-
-    // Try to get a signed upload from backend
-    const timestamp = Math.floor(Date.now() / 1000);
-    try {
-      const sigRes = await fetch(`${BACKEND_URL}/api/sign-upload`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ public_id: fullPublicId, timestamp })
-      });
-      const sigData = await sigRes.json();
-      if (sigData.signature && sigData.api_key) {
-        widgetConfig.apiKey = sigData.api_key;
-        widgetConfig.uploadSignature = sigData.signature;
-        widgetConfig.uploadSignatureTimestamp = timestamp;
-      } else {
-        // Fall back to unsigned preset
-        widgetConfig.uploadPreset = 'open247_uploads';
-      }
-    } catch (e) {
-      // Backend unavailable — use unsigned preset
-      widgetConfig.uploadPreset = 'open247_uploads';
-    }
-
-    const widget = cloudinary.createUploadWidget(widgetConfig, (error, result) => {
+    }, (error, result) => {
       if (error) {
         console.error('[Cloudinary error]', error);
         const msg = error.message || error.statusText || JSON.stringify(error);
