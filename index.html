@@ -973,7 +973,72 @@
     .petals-bg { display: none; }
   }
 
-  /* ---- ERROR / SUCCESS TOAST ---- */
+  /* ---- LIGHTBOX ---- */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 75vh;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+  .lightbox-download {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 100px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--lavender-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .lightbox-download:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 24px rgba(139,92,246,0.3);
+  }
+  .lightbox-download svg { width: 16px; height: 16px; }
   #cld-toast {
     position: fixed;
     bottom: 28px;
@@ -1038,6 +1103,16 @@
 <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript" defer></script>
 </head>
 <body>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <img id="lightbox-img" src="" alt="Full size photo">
+  <button class="lightbox-download" id="lightbox-dl" onclick="downloadLightboxImage()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download Photo
+  </button>
+</div>
 
 <!-- Floating petals background -->
 <div class="petals-bg" id="petals"></div>
@@ -1505,9 +1580,9 @@
       // Hide the upload overlay once image is set
       const overlay = zone.querySelector('.upload-overlay');
       if (overlay) overlay.style.display = 'none';
-      // Remove click handler so it can't be re-uploaded
-      zone.style.cursor = 'default';
-      zone.onclick = null;
+      // Make photo clickable to open lightbox
+      zone.style.cursor = 'pointer';
+      zone.onclick = () => openLightbox(url);
     }
   }
 
@@ -1674,6 +1749,39 @@
       drawer.classList.remove('open');
       hamburger.classList.remove('open');
     });
+  });
+
+  // ---- Lightbox ----
+  let currentLightboxUrl = '';
+
+  function openLightbox(url) {
+    currentLightboxUrl = url;
+    document.getElementById('lightbox-img').src = url;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(event) {
+    if (event && event.target !== event.currentTarget) return;
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function downloadLightboxImage() {
+    if (!currentLightboxUrl) return;
+    const a = document.createElement('a');
+    a.href = currentLightboxUrl;
+    a.download = 'open247-photo.jpg';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  // Close lightbox with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
   });
 </script>
 </body>
