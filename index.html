@@ -42,25 +42,23 @@
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Subtle motion blur on scroll-revealed elements */
+  /* GPU-accelerated reveal — only animate transform & opacity (no filter blur on scroll) */
   .reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: blur(4px);
+    transform: translateY(24px) translateZ(0);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
   }
 
   .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
+    transform: translateY(0) translateZ(0);
   }
 
-  .reveal-delay-1 { transition-delay: 0.12s; }
-  .reveal-delay-2 { transition-delay: 0.24s; }
-  .reveal-delay-3 { transition-delay: 0.36s; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
 
   /* ---- FLOATING PETALS ---- */
   .petals-bg {
@@ -77,7 +75,8 @@
     border-radius: 50% 50% 50% 0;
     opacity: 0.18;
     animation: floatDown linear infinite;
-    will-change: transform, opacity;
+    will-change: transform;
+    transform: translateZ(0);
   }
   @keyframes floatDown {
     0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
@@ -161,9 +160,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(255,255,255,0.7);
     border: 1px solid rgba(196,181,253,0.55);
     border-radius: 100px;
     padding: 6px 18px;
@@ -216,16 +213,14 @@
   }
 
   .hero-name-tag {
-    background: rgba(255,255,255,0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.65);
     border: 1.5px solid rgba(196,181,253,0.5);
     border-radius: 100px;
     padding: 8px 22px;
     font-size: 14px;
     font-weight: 500;
     color: var(--text-mid);
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
     position: relative; z-index: 2;
   }
@@ -391,21 +386,19 @@
   }
 
   .memory-card {
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255,255,255,0.85);
     border-radius: 20px;
     border: 1px solid rgba(221,214,254,0.7);
     overflow: hidden;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
                 box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
+    transform: translateZ(0);
   }
 
   .memory-card:hover {
-    transform: translateY(-6px) scale(1.01);
+    transform: translateY(-6px) scale(1.01) translateZ(0);
     box-shadow: 0 20px 60px rgba(139, 92, 246, 0.18);
-    will-change: transform;
   }
 
   .memory-img-placeholder {
@@ -613,19 +606,18 @@
   }
 
   .tribute-card {
-    background: rgba(245,243,255,0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(245,243,255,0.88);
     border: 1px solid rgba(221,214,254,0.6);
     border-radius: 18px;
     padding: 22px 20px 20px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
                 box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    transform: translateZ(0);
   }
 
   .tribute-card:hover {
-    transform: translateY(-4px) scale(1.01);
+    transform: translateY(-4px) scale(1.01) translateZ(0);
     box-shadow: 0 12px 40px rgba(139,92,246,0.12);
   }
 
@@ -860,8 +852,8 @@
 
   /* ---- ANIMATIONS ---- */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
-    to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+    from { opacity: 0; transform: translateY(24px) translateZ(0); }
+    to   { opacity: 1; transform: translateY(0) translateZ(0); }
   }
 
   /* ---- CLOUDINARY UPLOAD ---- */
@@ -908,8 +900,7 @@
   }
 
   .upload-btn {
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.9);
     border: 1.5px solid rgba(196,181,253,0.7);
     border-radius: 100px;
     padding: 8px 18px;
@@ -2162,7 +2153,8 @@
   // ---- Floating petals (use DocumentFragment for batch DOM insert)
   const petalContainer = document.getElementById('petals');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const PETAL_COUNT = prefersReducedMotion ? 0 : 15;
+  const isMobile = window.innerWidth < 768;
+  const PETAL_COUNT = prefersReducedMotion ? 0 : (isMobile ? 8 : 15);
   const petalColors = ['#c4b5fd','#ddd6fe','#f5e6f0','#e8d5f5','#f9c8e0','#a78bfa'];
 
   if (PETAL_COUNT > 0) {
