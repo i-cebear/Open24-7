@@ -113,6 +113,22 @@ app.post('/api/sign-upload', (req, res) => {
   res.json({ signature, api_key: cloudinary.config().api_key });
 });
 
+// Delete an image
+app.delete('/api/delete-image', async (req, res) => {
+  const { zoneId } = req.body;
+  if (!zoneId) {
+    return res.status(400).json({ error: 'Missing zoneId' });
+  }
+
+  try {
+    await Image.findOneAndDelete({ zoneId });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting image:', err.message);
+    res.status(500).json({ error: 'Failed to delete image' });
+  }
+});
+
 // ---- TRIBUTES API ----
 
 // Get all tributes

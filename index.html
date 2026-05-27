@@ -1246,6 +1246,31 @@
     box-shadow: 0 8px 24px rgba(139,92,246,0.3);
   }
   .lightbox-download svg { width: 16px; height: 16px; }
+  .lightbox-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .lightbox-delete {
+    background: rgba(254,226,226,0.9);
+    border: none;
+    border-radius: 100px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #991b1b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .lightbox-delete:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 24px rgba(239,68,68,0.3);
+  }
+  .lightbox-delete svg { width: 16px; height: 16px; }
   #cld-toast {
     position: fixed;
     bottom: 28px;
@@ -1315,10 +1340,16 @@
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
   <img id="lightbox-img" src="" alt="Full size photo">
-  <button class="lightbox-download" id="lightbox-dl" onclick="downloadLightboxImage()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    Download Photo
-  </button>
+  <div class="lightbox-buttons">
+    <button class="lightbox-download" onclick="downloadLightboxImage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download
+    </button>
+    <button class="lightbox-delete" id="lightbox-delete-btn" onclick="deleteLightboxImage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      Delete
+    </button>
+  </div>
 </div>
 
 <!-- Floating petals background -->
@@ -1841,9 +1872,9 @@
       // Hide the upload overlay once image is set
       const overlay = zone.querySelector('.upload-overlay');
       if (overlay) overlay.style.display = 'none';
-      // Make photo clickable to open lightbox
+      // Make photo clickable to open lightbox with zoneId for delete
       zone.style.cursor = 'pointer';
-      zone.onclick = () => openLightbox(url);
+      zone.onclick = () => openLightbox(url, zoneId);
     }
   }
 
@@ -2014,10 +2045,14 @@
 
   // ---- Lightbox ----
   let currentLightboxUrl = '';
+  let currentLightboxZoneId = '';
 
-  function openLightbox(url) {
+  function openLightbox(url, zoneId) {
     currentLightboxUrl = url;
+    currentLightboxZoneId = zoneId || '';
     document.getElementById('lightbox-img').src = url;
+    // Show delete button only if we know which zone it belongs to
+    document.getElementById('lightbox-delete-btn').style.display = zoneId ? '' : 'none';
     document.getElementById('lightbox').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -2038,6 +2073,40 @@
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+  }
+
+  async function deleteLightboxImage() {
+    if (!currentLightboxZoneId) return;
+    if (!confirm('Delete this photo? This cannot be undone.')) return;
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/delete-image`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ zoneId: currentLightboxZoneId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Reset the zone to empty state
+        const zone = document.getElementById('zone-' + currentLightboxZoneId);
+        const img = document.getElementById('img-' + currentLightboxZoneId);
+        if (zone && img) {
+          img.src = '';
+          img.style.display = 'none';
+          zone.classList.add('empty');
+          zone.style.cursor = 'pointer';
+          zone.onclick = () => openUpload(currentLightboxZoneId);
+          const overlay = zone.querySelector('.upload-overlay');
+          if (overlay) overlay.style.display = '';
+        }
+        closeLightbox();
+        showToast('success', 'Photo deleted');
+      } else {
+        showToast('error', 'Failed to delete', data.error);
+      }
+    } catch (e) {
+      showToast('error', 'Could not reach server', e.message);
+    }
   }
 
   // Close lightbox with Escape key
