@@ -52,18 +52,22 @@
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* GPU-accelerated reveal — only animate transform & opacity (no filter blur on scroll) */
+  /* GPU-accelerated reveal with motion blur entrance */
   .reveal {
     opacity: 0;
     transform: translateY(24px) translateZ(0);
     transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: opacity, transform;
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(6px);
+    will-change: opacity, transform, filter;
   }
 
   .reveal.visible {
     opacity: 1;
     transform: translateY(0) translateZ(0);
+    filter: blur(0);
+    will-change: auto;
   }
 
   .reveal-delay-1 { transition-delay: 0.1s; }
@@ -862,8 +866,8 @@
 
   /* ---- ANIMATIONS ---- */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px) translateZ(0); }
-    to   { opacity: 1; transform: translateY(0) translateZ(0); }
+    from { opacity: 0; transform: translateY(24px) translateZ(0); filter: blur(6px); }
+    to   { opacity: 1; transform: translateY(0) translateZ(0); filter: blur(0); }
   }
 
   /* ---- CLOUDINARY UPLOAD ---- */
@@ -1054,11 +1058,25 @@
     color: var(--text-dark);
     text-decoration: none;
     background: transparent;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, filter 0.3s ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     min-height: 44px;
+    filter: blur(3px);
+    opacity: 0;
   }
+
+  .mobile-drawer.open a {
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  .mobile-drawer.open a:nth-child(1) { transition-delay: 0.05s; }
+  .mobile-drawer.open a:nth-child(2) { transition-delay: 0.08s; }
+  .mobile-drawer.open a:nth-child(3) { transition-delay: 0.11s; }
+  .mobile-drawer.open a:nth-child(4) { transition-delay: 0.14s; }
+  .mobile-drawer.open a:nth-child(5) { transition-delay: 0.17s; }
+  .mobile-drawer.open a:nth-child(6) { transition-delay: 0.20s; }
 
   .mobile-drawer a:last-child { border-bottom: none; }
 
@@ -1241,11 +1259,14 @@
     overflow-y: auto;
     position: relative;
     box-shadow: 0 24px 80px rgba(0,0,0,0.2);
-    transform: translateY(20px) scale(0.96);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(20px) scale(0.96) translateZ(0);
+    filter: blur(4px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .modal-overlay.active .modal-card {
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1) translateZ(0);
+    filter: blur(0);
   }
   .modal-close {
     position: absolute;
@@ -1366,11 +1387,14 @@
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     object-fit: contain;
-    transform: scale(0.92);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.92) translateZ(0);
+    filter: blur(8px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .lightbox.active img {
-    transform: scale(1);
+    transform: scale(1) translateZ(0);
+    filter: blur(0);
   }
   .lightbox-close {
     position: absolute;
@@ -1447,12 +1471,13 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.6s ease, visibility 0.6s ease, filter 0.6s ease;
   }
   .loading-screen.hidden {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    filter: blur(8px);
   }
   .loading-spinner {
     width: 40px;
