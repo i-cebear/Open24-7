@@ -37,6 +37,31 @@
     cursor: default;
   }
 
+  /* ---- SMOOTH GLOBAL TRANSITIONS ---- */
+  a, button, .memory-card, .tribute-card, .hero-name-tag, .upload-btn {
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Subtle motion blur on scroll-revealed elements */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(4px);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.12s; }
+  .reveal-delay-2 { transition-delay: 0.24s; }
+  .reveal-delay-3 { transition-delay: 0.36s; }
+
   /* ---- FLOATING PETALS ---- */
   .petals-bg {
     position: fixed;
@@ -209,7 +234,8 @@
     background: var(--lavender-100);
     border-color: var(--lavender-400);
     color: var(--lavender-600);
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(139,92,246,0.12);
   }
 
   .hero-scroll {
@@ -250,6 +276,12 @@
     align-items: center;
     justify-content: space-between;
     height: 60px;
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  nav:hover {
+    background: rgba(253, 249, 240, 0.9);
+    box-shadow: 0 4px 20px rgba(139,92,246,0.06);
   }
 
   .nav-logo {
@@ -272,10 +304,23 @@
     color: var(--text-mid);
     text-decoration: none;
     letter-spacing: 0.04em;
-    transition: color 0.2s;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--lavender-500);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .nav-links a:hover { color: var(--lavender-600); }
+  .nav-links a:hover::after { width: 100%; }
 
   /* ---- SECTION SHARED ---- */
   .section { position: relative; z-index: 1; padding: 100px 24px; }
@@ -352,12 +397,13 @@
     border-radius: 20px;
     border: 1px solid rgba(221,214,254,0.7);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
   }
 
   .memory-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-6px) scale(1.01);
     box-shadow: 0 20px 60px rgba(139, 92, 246, 0.18);
     will-change: transform;
   }
@@ -573,13 +619,14 @@
     border: 1px solid rgba(221,214,254,0.6);
     border-radius: 18px;
     padding: 22px 20px 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
   }
 
   .tribute-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(139,92,246,0.1);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(139,92,246,0.12);
   }
 
   .tribute-card::before {
@@ -813,24 +860,9 @@
 
   /* ---- ANIMATIONS ---- */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
+    to   { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
 
   /* ---- CLOUDINARY UPLOAD ---- */
   .upload-zone {
@@ -1182,7 +1214,7 @@
     padding: 24px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .modal-overlay.active {
     opacity: 1;
@@ -1198,6 +1230,11 @@
     overflow-y: auto;
     position: relative;
     box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .modal-overlay.active .modal-card {
+    transform: translateY(0) scale(1);
   }
   .modal-close {
     position: absolute;
@@ -1306,7 +1343,7 @@
     gap: 20px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .lightbox.active {
     opacity: 1;
@@ -1318,6 +1355,11 @@
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     object-fit: contain;
+    transform: scale(0.92);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .lightbox.active img {
+    transform: scale(1);
   }
   .lightbox-close {
     position: absolute;
