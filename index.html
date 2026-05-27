@@ -1491,9 +1491,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ zoneId, url })
       });
-      if (!response.ok) console.warn('Backend save failed');
+      const data = await response.json();
+      if (!response.ok) {
+        console.error('Backend save failed:', data);
+        showToast('error', 'Failed to save photo', data.error || 'Unknown error');
+      } else {
+        console.log('Image saved to backend:', data);
+      }
     } catch (e) {
-      console.warn('Backend save error:', e.message);
+      console.error('Backend save error:', e);
+      showToast('error', 'Could not reach server', e.message);
     }
   }
 
