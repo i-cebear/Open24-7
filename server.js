@@ -20,8 +20,12 @@ app.use(express.static(__dirname, {
 }));
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI
-  || 'mongodb://sainiabhimanyu155_db_user:155155@ac-oxpa6p2-shard-00-00.uunhkff.mongodb.net:27017,ac-oxpa6p2-shard-00-01.uunhkff.mongodb.net:27017,ac-oxpa6p2-shard-00-02.uunhkff.mongodb.net:27017/open247?ssl=true&replicaSet=atlas-sa33zg-shard-0&authSource=admin';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('MONGODB_URI environment variable is not set');
+  process.exit(1);
+}
 
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
