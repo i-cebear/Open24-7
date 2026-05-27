@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="OPEN 24/7 — A shared memory space for Abhimanyu, Ridhi, Versha & Vikram.">
 <title>OPEN 24/7 — Always Together</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+
+<!-- Open Graph (link preview on WhatsApp, Instagram, etc.) -->
+<meta property="og:title" content="OPEN 24/7 — Always Together">
+<meta property="og:description" content="Because real ones never close 🤍 — Abhimanyu, Ridhi, Versha & Vikram">
+<meta property="og:image" content="https://open24-7-backend.onrender.com/favicon.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://res.cloudinary.com">
@@ -1425,6 +1435,43 @@
     box-shadow: 0 8px 24px rgba(239,68,68,0.3);
   }
   .lightbox-delete svg { width: 16px; height: 16px; }
+
+  /* ---- LOADING SPINNER ---- */
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  .loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--lavender-200);
+    border-top-color: var(--lavender-500);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .loading-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text-light);
+    letter-spacing: 0.04em;
+  }
+
   #cld-toast {
     position: fixed;
     bottom: 28px;
@@ -1504,6 +1551,12 @@
       Delete
     </button>
   </div>
+</div>
+
+<!-- Loading Spinner -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <p class="loading-text">Loading memories...</p>
 </div>
 
 <!-- Floating petals background -->
@@ -2055,6 +2108,8 @@
 
   // On load — fetch saved image URLs from backend
   window.addEventListener('DOMContentLoaded', async () => {
+    const loadingScreen = document.getElementById('loadingScreen');
+
     let backendData = {};
     try {
       const res = await fetch(`${BACKEND_URL}/api/get-images`);
@@ -2086,6 +2141,9 @@
       });
       await Promise.all(checks);
     }
+
+    // Hide loading spinner
+    loadingScreen.classList.add('hidden');
   });
 
   async function openUpload(zoneId) {
@@ -2384,8 +2442,17 @@
   // ---- Tributes (editable short notes) ----
   function editTribute(btn) {
     const card = btn.closest('.tribute-card');
+    const author = card.dataset.author;
     const textEl = card.querySelector('.tribute-text');
     const currentText = textEl.querySelector('.tribute-placeholder') ? '' : textEl.textContent.trim();
+
+    // Ask who is editing — must match the card's author
+    const names = ['Abhimanyu', 'Ridhi', 'Versha', 'Vikram'];
+    const who = prompt(`This is ${author}'s card. Type your name to confirm you're ${author}:`);
+    if (!who || who.trim().toLowerCase() !== author.toLowerCase()) {
+      showToast('error', 'Only ' + author + ' can edit this card');
+      return;
+    }
 
     // Replace text with textarea
     const textarea = document.createElement('textarea');
@@ -2408,7 +2475,6 @@
     saveBtn.addEventListener('click', async () => {
       const newText = textarea.value.trim();
       const personId = card.dataset.person;
-      const author = card.dataset.author;
 
       saveBtn.textContent = 'Saving...';
       saveBtn.disabled = true;
