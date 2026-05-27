@@ -35,6 +35,17 @@ const imageSchema = new mongoose.Schema({
 
 const Image = mongoose.model('Image', imageSchema);
 
+// Schema for user-created memories
+const memorySchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, default: '' },
+  photoUrl: { type: String, default: '' },
+  tag: { type: String, default: '' },
+  createdBy: { type: String, default: 'Someone' }
+}, { timestamps: true });
+
+const Memory = mongoose.model('Memory', memorySchema);
+
 // Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -90,6 +101,52 @@ app.post('/api/sign-upload', (req, res) => {
   const paramsToSign = { public_id, timestamp };
   const signature = cloudinary.utils.api_sign_request(paramsToSign, secret);
   res.json({ signature, api_key: cloudinary.config().api_key });
+});
+
+// ---- MEMORIES API ----
+
+// Get all user-created memories
+app.get('/api/memories', async (req, res) => {
+  try {
+    const memories = await Memory.find({}).sort({ createdAt: -1 });
+    res.json(memories);
+  } catch (err) {
+    console.error('Error reading memories:', err.message);
+    res.json([]);
+  }
+});
+
+// Create a new memory
+app.post('/api/memories', async (req, res) => {
+  const { title, description, photoUrl, tag, createdBy } = req.body;
+  if (!title) {
+    return res.status(400).json({ error: 'Title is required' });
+  }
+
+  try {
+    const memory = await Memory.create({
+      title,
+      description: description || '',
+      photoUrl: photoUrl || '',
+      tag: tag || '',
+      createdBy: createdBy || 'Someone'
+    });
+    res.json({ success: true, memory });
+  } catch (err) {
+    console.error('Error creating memory:', err.message);
+    res.status(500).json({ error: 'Failed to create memory' });
+  }
+});
+
+// Delete a memory
+app.delete('/api/memories/:id', async (req, res) => {
+  try {
+    await Memory.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting memory:', err.message);
+    res.status(500).json({ error: 'Failed to delete memory' });
+  }
 });
 
 // Start server

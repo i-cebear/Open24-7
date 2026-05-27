@@ -973,6 +973,154 @@
     .petals-bg { display: none; }
   }
 
+  /* ---- ADD MEMORY BUTTON ---- */
+  .add-memory-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px dashed var(--lavender-300);
+    border-radius: 100px;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--lavender-600);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .add-memory-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139,92,246,0.15);
+    background: var(--lavender-50);
+    border-style: solid;
+  }
+
+  /* ---- MODAL ---- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-card {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 32px;
+    max-width: 460px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none; border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text-dark); }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+  }
+  .modal-form { display: flex; flex-direction: column; gap: 6px; }
+  .modal-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-mid);
+    letter-spacing: 0.04em;
+    margin-top: 10px;
+  }
+  .modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--lavender-200);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dark);
+    background: var(--lavender-50);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .modal-input:focus { border-color: var(--lavender-400); }
+  .modal-textarea { min-height: 80px; resize: vertical; }
+  .modal-photo-area {
+    width: 100%;
+    height: 140px;
+    border: 1.5px dashed var(--lavender-300);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--lavender-50);
+    transition: background 0.2s, border-color 0.2s;
+    overflow: hidden;
+    position: relative;
+  }
+  .modal-photo-area:hover {
+    background: var(--lavender-100);
+    border-color: var(--lavender-400);
+  }
+  .modal-photo-area img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+  }
+  #mem-photo-text {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .modal-submit {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: var(--lavender-500);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .modal-submit:hover {
+    background: var(--lavender-600);
+    transform: translateY(-1px);
+  }
+  .modal-submit:disabled {
+    background: var(--lavender-200);
+    cursor: not-allowed;
+    transform: none;
+  }
+
   /* ---- LIGHTBOX ---- */
   .lightbox {
     position: fixed;
@@ -1287,8 +1435,46 @@
 
     </div>
 
+    <!-- Add Memory Button -->
+    <div style="text-align:center; margin-top:40px;">
+      <button class="add-memory-btn" onclick="openAddMemory()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add a Memory
+      </button>
+    </div>
+
   </div>
 </section>
+
+<!-- Add Memory Modal -->
+<div class="modal-overlay" id="addMemoryModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeAddMemory()">✕</button>
+    <h3 class="modal-title">Add a new memory ✨</h3>
+    <div class="modal-form">
+      <label class="modal-label">Your name</label>
+      <select id="mem-author" class="modal-input">
+        <option value="Abhimanyu">Abhimanyu</option>
+        <option value="Ridhi">Ridhi</option>
+        <option value="Versha">Versha</option>
+        <option value="Vikram">Vikram</option>
+      </select>
+      <label class="modal-label">Title</label>
+      <input type="text" id="mem-title" class="modal-input" placeholder="e.g. Late Night Drive">
+      <label class="modal-label">Short note</label>
+      <textarea id="mem-desc" class="modal-input modal-textarea" placeholder="What happened? Keep it short and sweet..."></textarea>
+      <label class="modal-label">Tag (optional)</label>
+      <input type="text" id="mem-tag" class="modal-input" placeholder="e.g. 🚗 Road trip">
+      <label class="modal-label">Photo</label>
+      <div class="modal-photo-area" id="mem-photo-area" onclick="uploadMemoryPhoto()">
+        <img id="mem-photo-preview" src="" style="display:none;">
+        <span id="mem-photo-text">📷 Tap to upload a photo</span>
+      </div>
+      <input type="hidden" id="mem-photo-url" value="">
+      <button class="modal-submit" onclick="submitMemory()">Save Memory</button>
+    </div>
+  </div>
+</div>
 
 <div class="ornament-divider">✦ ✦ ✦</div>
 
@@ -1783,6 +1969,118 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLightbox();
   });
+
+  // ---- Add Memory Feature ----
+  function openAddMemory() {
+    document.getElementById('addMemoryModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAddMemory() {
+    document.getElementById('addMemoryModal').classList.remove('active');
+    document.body.style.overflow = '';
+    // Reset form
+    document.getElementById('mem-title').value = '';
+    document.getElementById('mem-desc').value = '';
+    document.getElementById('mem-tag').value = '';
+    document.getElementById('mem-photo-url').value = '';
+    document.getElementById('mem-photo-preview').style.display = 'none';
+    document.getElementById('mem-photo-text').style.display = '';
+  }
+
+  function uploadMemoryPhoto() {
+    const widget = cloudinary.createUploadWidget({
+      cloudName: CLD_CLOUD,
+      uploadPreset: 'open247_uploads',
+      multiple: false,
+      resourceType: 'image',
+      sources: ['local', 'camera', 'url'],
+    }, (error, result) => {
+      if (result && result.event === 'success') {
+        const url = result.info.secure_url;
+        document.getElementById('mem-photo-url').value = url;
+        document.getElementById('mem-photo-preview').src = url;
+        document.getElementById('mem-photo-preview').style.display = 'block';
+        document.getElementById('mem-photo-text').style.display = 'none';
+        widget.close();
+      }
+    });
+    widget.open();
+  }
+
+  async function submitMemory() {
+    const title = document.getElementById('mem-title').value.trim();
+    const description = document.getElementById('mem-desc').value.trim();
+    const tag = document.getElementById('mem-tag').value.trim();
+    const photoUrl = document.getElementById('mem-photo-url').value;
+    const createdBy = document.getElementById('mem-author').value;
+
+    if (!title) {
+      showToast('error', 'Please add a title');
+      return;
+    }
+
+    const btn = document.querySelector('.modal-submit');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/memories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, photoUrl, tag, createdBy })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('success', 'Memory added! ✨');
+        closeAddMemory();
+        renderMemoryCard(data.memory);
+      } else {
+        showToast('error', 'Failed to save', data.error);
+      }
+    } catch (e) {
+      showToast('error', 'Could not reach server', e.message);
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Save Memory';
+  }
+
+  function renderMemoryCard(memory) {
+    const grid = document.querySelector('.memories-grid');
+    const card = document.createElement('div');
+    card.className = 'memory-card reveal visible';
+    const photoHtml = memory.photoUrl
+      ? `<img class="memory-img-full" src="${memory.photoUrl}" alt="${memory.title}" onclick="openLightbox('${memory.photoUrl}')" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;cursor:pointer;border-radius:0;">`
+      : `<div class="memory-img-placeholder"><div class="emoji">📸</div></div>`;
+    const tagHtml = memory.tag ? `<span class="memory-tag">${memory.tag}</span>` : '';
+    card.innerHTML = `
+      ${photoHtml}
+      <div class="memory-body">
+        <div class="memory-date">by ${memory.createdBy || 'Someone'}</div>
+        <div class="memory-title">${memory.title}</div>
+        <div class="memory-desc">${memory.description || ''}</div>
+        ${tagHtml}
+      </div>
+    `;
+    grid.appendChild(card);
+  }
+
+  // Load user-created memories on page load
+  async function loadMemories() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/memories`);
+      if (res.ok) {
+        const memories = await res.json();
+        memories.forEach(renderMemoryCard);
+      }
+    } catch (e) {
+      console.warn('Could not load memories:', e.message);
+    }
+  }
+
+  // Call after DOM is ready
+  loadMemories();
 </script>
 </body>
 </html>
